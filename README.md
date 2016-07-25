@@ -1,6 +1,8 @@
 # UGA Class Registration Helper
 - Provides an convenient access to third-party ratings  
-- **This extension is a proof-of-concept program**
+- **This extension is a proof-of-concept program**  
+  
+
 ### Screenshots  
 **Before**  
 ![Before](http://i.imgur.com/QrbO8J7.png)  
