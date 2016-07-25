@@ -1,0 +1,46 @@
+{
+  	"manifest_version": 2,
+
+  	"name": "UGA Class Registration Plugin",
+  	"description": "Provides an convenient access to third-party ratings",
+  	"version": "0.0.1",
+
+  	"permissions":
+	[
+    	"http://www.ratemyprofessors.com/*"
+	],
+
+	"content_scripts":
+	[
+		{
+			"matches": ["https://sis-ssb-prod.uga.edu/PROD/bwckgens.P_RegsGetCrse","https://sis-ssb-prod.uga.edu/PROD/bwskfcls.P_GetCrse"],
+			"js":
+			[
+				"jquery-3.0.0.min.js",
+				"Ratings.js"
+			]
+		}
+	],
+
+	"browser_action":
+	{
+		"default_icon": {
+			"19": "teach_19.png"
+		},
+		"default_popup": "popup.html"
+	},
+
+	"background":
+	{
+		"scripts":["background.js"],
+		"persistent": false
+	},
+
+	"icons": {
+		"16": "teach_16.png",
+		"19": "teach_19.png",
+		"32": "teach_32.png",
+		"48": "teach_32.png",
+		"128": "teach_128.png"
+	}
+}
