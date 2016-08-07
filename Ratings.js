@@ -103,7 +103,10 @@ function updateCells(targetRow, ratings, profNameInArray)
 			if(profData[profNameInArray[0] + profNameInArray[1]] === "Not Found")
 			{
 				//console.log("duplicate prof " + profNameInArray + " is set to not found");
-				$(this).find("td:eq(17)").text("Not Found");
+				var manualSearchURL = "http://www.ratemyprofessors.com/search.jsp?queryBy=teacherName&schoolName=University+of+Georgia&queryoption=HEADER&query=" + profNameInArray[1]+ "&facetSearch=true";
+				$(this).find("td:eq(17)").html(
+					"<td>Not Found<br><a href=" + manualSearchURL + " target='_blank'>Manual Search</a></td>");
+				//console.log("manualSearchURL is " + manualSearchURL);
 			}
 			else {
 				//console.log("duplicate prof " + profNameInArray + " has ratings");
@@ -111,7 +114,7 @@ function updateCells(targetRow, ratings, profNameInArray)
 				var overallQuality = profData[profNameInArray[0] + profNameInArray[1]][1];
 				var RMP_URL = profData[profNameInArray[0] + profNameInArray[1]][2];
 				$(this).find("td:eq(17)").html(
-					"<td>Difficulty:" + levelOfDifficulty + "<br>Overall:" + overallQuality + "<br><a href="+ RMP_URL + ">Visit RMP</a></td>"
+					"<td>Difficulty:" + levelOfDifficulty + "<br>Overall:" + overallQuality + "<br><a href="+ RMP_URL + " target='_blank'>Visit RMP</a></td>"
 				);
 			}
 		}
@@ -126,7 +129,7 @@ function updateCells(targetRow, ratings, profNameInArray)
 			//new entry in profData
 			profData[profNameInArray[0]+profNameInArray[1]] = [levelOfDifficulty, overallQuality, RMP_URL];
 			$(this).find("td:eq(17)").html(
-				"<td>Easiness:" + levelOfDifficulty + "<br>Overall:" + overallQuality + "<br><a href="+ RMP_URL + " target='_blank'>Visit RMP</a></td>"
+				"<td>Difficulty:" + levelOfDifficulty + "<br>Overall:" + overallQuality + "<br><a href="+ RMP_URL + " target='_blank'>Visit RMP</a></td>"
 			);
 		}
 
@@ -134,7 +137,10 @@ function updateCells(targetRow, ratings, profNameInArray)
 		{
 			//console.log(profNameInArray[0] + profNameInArray[1] + " is a new not found entry");
 			profData[profNameInArray[0] + profNameInArray[1]] = "Not Found";
-			$(this).find("td:eq(17)").text("Not Found");
+			var manualSearchURL = "http://www.ratemyprofessors.com/search.jsp?queryBy=teacherName&schoolName=University+of+Georgia&queryoption=HEADER&query=" + profNameInArray[1]+ "&facetSearch=true";
+			$(this).find("td:eq(17)").html(
+				"<td>Not Found<br><a href=" + manualSearchURL + " target='_blank'>Manual Search</a></td>");
+			//console.log("manualSearchURL is " + manualSearchURL);
 		}
 	});
 }
