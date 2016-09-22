@@ -166,19 +166,19 @@ function extractRatings(profURL, profIndex, profName)
 		//console.log("result of extract ratings has arrived");
 		var overallQuality = "Error";
 		var levelOfDifficulty = "Error";
-		if($(response.receivedData).find(".left-breakdown").length === 0)
+		var pageHTML = $.parseHTML(response.receivedData);
+		if($(pageHTML).find(".left-breakdown").length === 0)
 		{
-			//console.log("Found the page but no content");
 			updateCells(response.profIndex, "Not Found", response.profName);
 		}
 		else {
 			try
 			{
-				overallQuality = $(response.receivedData)
+				overallQuality = $(pageHTML)
 					.find(".left-breakdown")
 					.find(".grade:eq(0)")
 					.text();
-				levelOfDifficulty = $(response.receivedData)
+				levelOfDifficulty = $(pageHTML)
 					.find(".left-breakdown")
 					.find(".grade:eq(2)")
 					.text();
@@ -221,11 +221,12 @@ function scrapeAndSearch()
 						"ProfIndex": index
 					}
 					//console.log("start searching for "+ formattedName[0] + " " + formattedName[1]);
-					chrome.runtime.sendMessage(message, function(response){
-						var resultCount = $(response.receivedData).find("#searchResultsBox").find(".result-count").text();
+					chrome.runtime.sendMessage(message, function(response) {
+                        var parsedResponse = $.parseHTML(response.receivedData)
+						var resultCount = $(parsedResponse).find("#searchResultsBox").find(".result-count").text();
 						if(resultCount === "Showing 1-1 of 1 result")
 						{
-							var profURL = $(response.receivedData).find(".listings-wrap").find("a[href^='/ShowRatings.jsp?']").attr("href");
+							var profURL = $(parsedResponse).find(".listings-wrap").find("a[href^='/ShowRatings.jsp?']").attr("href");
 							//console.log(profURL + " " + response.profName[0] + response.profName[1]);
 							//console.log("profIndex is " + response.profIndex);
 							extractRatings(profURL, response.profIndex, response.profName);

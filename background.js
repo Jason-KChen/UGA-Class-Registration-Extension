@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
 				receivedData: xhttp.responseText,
 				profName: request.SearchName,
 				profIndex: request.ProfIndex,
-				SearchURL: request.SearchURL
+				SearchURL: request.SearchURL,
 			});
 		}
 		else {}
