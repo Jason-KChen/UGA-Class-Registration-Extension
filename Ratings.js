@@ -6,8 +6,7 @@ var profData = {
 
 };
 
-function main()
-{
+function main() {
 	if($(".captiontext").length === 1 && $(".captiontext").text() === "Sections Found")
 	{
 		//console.log("on the right page");
@@ -20,24 +19,18 @@ function main()
 
 }
 
-function createNewCol()
-{
-	$(document).find(".datadisplaytable").find("tr").each(function(index, value)
-	{
-		if(index == 1)
-		{
+function createNewCol() {
+	$(document).find(".datadisplaytable").find("tr").each(function(index, value) {
+		if(index == 1) {
 			$(this).find("th:eq(13)").after("<th style='background-color:#dfddd8;'>Ratings</th>");
 		}
-		if(index > 1)
-		{
-			if($(this).find("td:eq(8)").text() === "TBA")
-			{
+		if(index > 1) {
+			if($(this).find("td:eq(8)").text() === "TBA") {
 				$(this).find("td:eq(8)").attr("colspan", 1);
 				$(this).find("td:eq(8)").after("<td style='font-size:85%; padding-top:4px; font-family:Verdana;'>TBA</td>");
 				$(this).find("td:eq(13)").after("<td>Loading...</td>");
 			}
-			else
-			{
+			else {
 				$(this).find("td:eq(13)").after("<td>Loading...</td>");
 			}
 
@@ -45,45 +38,36 @@ function createNewCol()
 	});
 }
 
-function formatName(givenString)
-{
+function formatName(givenString) {
 	//console.log("About to formateName " + givenString);
 	var resultArray = [];
 
-	if(givenString.indexOf(",") > 0)
-	{
+	if(givenString.indexOf(",") > 0) {
 		//console.log("Found more than one professors :" + givenString);
 		//console.log(givenString.indexOf(","));
 		return formatName(givenString.substring(0,givenString.indexOf(",")));
-	}
-	else
-	{
-		if(givenString === "TBA")
-		{
+	} else {
+		if(givenString === "TBA") {
 			return "TBA";
-		}
-		else
-		{
+		} else {
 			var tempArray = givenString.split(" ");
-			tempArray = tempArray.filter(function(givenElements)
-			{
+			tempArray = tempArray.filter(function(givenElements) {
 				return (givenElements !== "" && givenElements !== "(P)" && givenElements !== "(P),");
 			});
 
-			if(tempArray.length === 3)
-			{
+			if(tempArray.length === 3) {
 				resultArray.push(tempArray[0]);
 				resultArray.push(tempArray[2]);
 				return resultArray;
 			}
-			if(tempArray.length === 2)
-			{
+
+			if(tempArray.length === 2) {
 				resultArray.push(tempArray[0]);
 				resultArray.push(tempArray[1]);
 				return resultArray;
 			}
-			if(tempArray.length != 2 && tempArray.length != 3)
-			{
+
+			if(tempArray.length != 2 && tempArray.length != 3) {
 				//console.log("Worst Case");
 				return tempArray;
 			}
@@ -92,29 +76,23 @@ function formatName(givenString)
 
 }
 
-function updateCells(targetRow, ratings, profNameInArray)
-{
+function updateCells(targetRow, ratings, profNameInArray) {
 	//console.log("received request to update cells");
 
-	$(".datadisplaytable").find("tr").each(function(index, value)
-	{
-		if(ratings === "TBA" && index === targetRow)
-		{
+	$(".datadisplaytable").find("tr").each(function(index, value) {
+		if(ratings === "TBA" && index === targetRow) {
 			$(this).find("td:eq(14)").text("TBA");
 		}
 
-		if(ratings === "duplicates" && index === targetRow)
-		{
+		if(ratings === "duplicates" && index === targetRow) {
 			//console.log("updating a cell for a duplicate Prof");
-			if(profData[profNameInArray[0] + profNameInArray[1]] === "Not Found")
-			{
+			if(profData[profNameInArray[0] + profNameInArray[1]] === "Not Found") {
 				//console.log("duplicate prof " + profNameInArray + " is set to not found");
 				var manualSearchURL = "http://www.ratemyprofessors.com/search.jsp?queryBy=teacherName&schoolName=University+of+Georgia&queryoption=HEADER&query=" + profNameInArray[1]+ "&facetSearch=true";
 				$(this).find("td:eq(14)").html(
 					"<td>Not Found<br><a href=" + manualSearchURL + " target='_blank'>Manual Search</a></td>");
 				//console.log("manualSearchURL is " + manualSearchURL);
-			}
-			else {
+			} else {
 				//console.log("duplicate prof " + profNameInArray + " has ratings");
 				var levelOfDifficulty = profData[profNameInArray[0] + profNameInArray[1]][0];
 				var overallQuality = profData[profNameInArray[0] + profNameInArray[1]][1];
@@ -125,8 +103,7 @@ function updateCells(targetRow, ratings, profNameInArray)
 			}
 		}
 
-		if(Array.isArray(ratings) && index === targetRow)
-		{
+		if(Array.isArray(ratings) && index === targetRow) {
 			//console.log("a new prof entry for " + profNameInArray);
 			var levelOfDifficulty = ratings[0];
 			var overallQuality = ratings[1];
@@ -139,8 +116,7 @@ function updateCells(targetRow, ratings, profNameInArray)
 			);
 		}
 
-		if(ratings === "Not Found" && index === targetRow)
-		{
+		if(ratings === "Not Found" && index === targetRow) {
 			//console.log(profNameInArray[0] + profNameInArray[1] + " is a new not found entry");
 			profData[profNameInArray[0] + profNameInArray[1]] = "Not Found";
 			var manualSearchURL = "http://www.ratemyprofessors.com/search.jsp?queryBy=teacherName&schoolName=University+of+Georgia&queryoption=HEADER&query=" + profNameInArray[1]+ "&facetSearch=true";
@@ -151,8 +127,7 @@ function updateCells(targetRow, ratings, profNameInArray)
 	});
 }
 
-function extractRatings(profURL, profIndex, profName)
-{
+function extractRatings(profURL, profIndex, profName) {
 	//console.log("received request to extract ratings for " + profName);
 	var targetURL = "http://www.ratemyprofessors.com" + profURL;
 	var message = {
@@ -162,18 +137,15 @@ function extractRatings(profURL, profIndex, profName)
 		"ProfIndex": profIndex
 	};
 	//console.log("send message to extract ratings for " + profName);
-	chrome.runtime.sendMessage(message, function(response){
+	chrome.runtime.sendMessage(message, function(response) {
 		//console.log("result of extract ratings has arrived");
 		var overallQuality = "Error";
 		var levelOfDifficulty = "Error";
 		var pageHTML = $.parseHTML(response.receivedData);
-		if($(pageHTML).find(".left-breakdown").length === 0)
-		{
+		if($(pageHTML).find(".left-breakdown").length === 0) {
 			updateCells(response.profIndex, "Not Found", response.profName);
-		}
-		else {
-			try
-			{
+		} else {
+			try {
 				overallQuality = $(pageHTML)
 					.find(".left-breakdown")
 					.find(".grade:eq(0)")
@@ -195,25 +167,17 @@ function extractRatings(profURL, profIndex, profName)
 
 function scrapeAndSearch()
 {
-	$(".datadisplaytable").find("tr").each(function(index, value)
-	{
-		if(index >= 2)
-		{
+	$(".datadisplaytable").find("tr").each(function(index, value) {
+		if(index >= 2) {
 			var formattedName = formatName($(this).find("td:eq(13)").text());
-			if(formattedName === "TBA")
-			{
+			if(formattedName === "TBA") {
 				updateCells(index,"TBA", "TBA");
-			}
-			else
-			{
+			} else {
 				//console.log("checking for duplicates for " + formattedName);
-				if(profData.hasOwnProperty(formattedName[0]+formattedName[1]))
-				{
+				if(profData.hasOwnProperty(formattedName[0]+formattedName[1])) {
 					//console.log(formattedName + "is a duplicate");
 					updateCells(index, "duplicates", formattedName);
-				}
-				else
-				{
+				} else {
 					var message = {
 						"Search": "yes",
 						"SearchName": formattedName,
@@ -224,19 +188,16 @@ function scrapeAndSearch()
 					chrome.runtime.sendMessage(message, function(response) {
                         var parsedResponse = $.parseHTML(response.receivedData)
 						var resultCount = $(parsedResponse).find("#searchResultsBox").find(".result-count").text();
-						if(resultCount === "Showing 1-1 of 1 result")
-						{
+						if(resultCount === "Showing 1-1 of 1 result") {
 							var profURL = $(parsedResponse).find(".listings-wrap").find("a[href^='/ShowRatings.jsp?']").attr("href");
 							//console.log(profURL + " " + response.profName[0] + response.profName[1]);
 							//console.log("profIndex is " + response.profIndex);
 							extractRatings(profURL, response.profIndex, response.profName);
-						}
-						else {
+						} else {
 							//console.log(response.profName[0] + response.profName[1]  + " Not Found");
 							updateCells(response.profIndex, "Not Found", response.profName);
 						}
-					}
-					);
+					});
 				}
 			}
 
