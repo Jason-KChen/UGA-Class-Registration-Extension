@@ -5,15 +5,16 @@
 var profData = {
 
 };
+var colForjQuery = ""
+var colForjQuery2 = ""
+var ratingCol = ""
 
 function main() {
-	if($(".captiontext").length === 1 && $(".captiontext").text() === "Sections Found")
-	{
+	if($(".captiontext").length === 1 && $(".captiontext").text() === "Sections Found") {
 		//console.log("on the right page");
 		createNewCol();
 		scrapeAndSearch();
-	}
-	else {
+	} else {
 		//console.log("wrong page, not doing anything");
 	}
 
@@ -22,16 +23,28 @@ function main() {
 function createNewCol() {
 	$(document).find(".datadisplaytable").find("tr").each(function(index, value) {
 		if(index == 1) {
-			$(this).find("th:eq(13)").after("<th style='background-color:#dfddd8;'>Ratings</th>");
+            var textAtCol13 = $(this).find("th:eq(13)").text()
+            console.log(textAtCol13)
+            if (textAtCol13 != "Instructor") {
+                colForjQuery = "th:eq(16)"
+                colForjQuery2 = "td:eq(16)"
+                ratingCol = "td:eq(17)"
+            } else {
+                colForjQuery = "th:eq(13)"
+                colForjQuery2 = "td:eq(13)"
+                ratingCol = "td:eq(14)"
+            }
+
+			$(this).find(colForjQuery).after("<th style='background-color:#dfddd8;'>Ratings</th>");
 		}
 		if(index > 1) {
 			if($(this).find("td:eq(8)").text() === "TBA") {
 				$(this).find("td:eq(8)").attr("colspan", 1);
 				$(this).find("td:eq(8)").after("<td style='font-size:85%; padding-top:4px; font-family:Verdana;'>TBA</td>");
-				$(this).find("td:eq(13)").after("<td>Loading...</td>");
+				$(this).find(colForjQuery2).after("<td>Loading...</td>");
 			}
 			else {
-				$(this).find("td:eq(13)").after("<td>Loading...</td>");
+				$(this).find(colForjQuery2).after("<td>Loading...</td>");
 			}
 
 		}
@@ -73,31 +86,34 @@ function formatName(givenString) {
 			}
 		}
 	}
-
 }
 
 function updateCells(targetRow, ratings, profNameInArray) {
 	//console.log("received request to update cells");
+    var manualSearchURL2 = ""
 
 	$(".datadisplaytable").find("tr").each(function(index, value) {
 		if(ratings === "TBA" && index === targetRow) {
-			$(this).find("td:eq(14)").text("TBA");
+			$(this).find(ratingCol).text("TBA");
 		}
 
 		if(ratings === "duplicates" && index === targetRow) {
 			//console.log("updating a cell for a duplicate Prof");
 			if(profData[profNameInArray[0] + profNameInArray[1]] === "Not Found") {
 				//console.log("duplicate prof " + profNameInArray + " is set to not found");
-				var manualSearchURL = "http://www.ratemyprofessors.com/search.jsp?queryBy=teacherName&schoolName=University+of+Georgia&queryoption=HEADER&query=" + profNameInArray[1]+ "&facetSearch=true";
-				$(this).find("td:eq(14)").html(
-					"<td>Not Found<br><a href=" + manualSearchURL + " target='_blank'>Manual Search</a></td>");
+				//var manualSearchURL = "http://www.ratemyprofessors.com/search.jsp?queryBy=teacherName&schoolName=University+of+Georgia&queryoption=HEADER&query=" + profNameInArray[1]+ "&facetSearch=true";
+                manualSearchURL2 = "http://www.ratemyprofessors.com/search.jsp?query=" + profNameInArray[0] + "+" +profNameInArray[1];
+
+                //changed to manualSearchURL2
+				$(this).find(ratingCol).html(
+					"<td>Not Found or Too Many Results<br><a href=" + manualSearchURL2 + " target='_blank'>Try Manual Search</a></td>");
 				//console.log("manualSearchURL is " + manualSearchURL);
 			} else {
 				//console.log("duplicate prof " + profNameInArray + " has ratings");
 				var levelOfDifficulty = profData[profNameInArray[0] + profNameInArray[1]][0];
 				var overallQuality = profData[profNameInArray[0] + profNameInArray[1]][1];
 				var RMP_URL = profData[profNameInArray[0] + profNameInArray[1]][2];
-				$(this).find("td:eq(14)").html(
+				$(this).find(ratingCol).html(
 					"<td>Difficulty:" + levelOfDifficulty + "<br>Overall:" + overallQuality + "<br><a href="+ RMP_URL + " target='_blank'>Visit RMP</a></td>"
 				);
 			}
@@ -111,7 +127,7 @@ function updateCells(targetRow, ratings, profNameInArray) {
 
 			//new entry in profData
 			profData[profNameInArray[0]+profNameInArray[1]] = [levelOfDifficulty, overallQuality, RMP_URL];
-			$(this).find("td:eq(14)").html(
+			$(this).find(ratingCol).html(
 				"<td>Difficulty:" + levelOfDifficulty + "<br>Overall:" + overallQuality + "<br><a href="+ RMP_URL + " target='_blank'>Visit RMP</a></td>"
 			);
 		}
@@ -119,9 +135,13 @@ function updateCells(targetRow, ratings, profNameInArray) {
 		if(ratings === "Not Found" && index === targetRow) {
 			//console.log(profNameInArray[0] + profNameInArray[1] + " is a new not found entry");
 			profData[profNameInArray[0] + profNameInArray[1]] = "Not Found";
-			var manualSearchURL = "http://www.ratemyprofessors.com/search.jsp?queryBy=teacherName&schoolName=University+of+Georgia&queryoption=HEADER&query=" + profNameInArray[1]+ "&facetSearch=true";
-			$(this).find("td:eq(14)").html(
-				"<td>Not Found<br><a href=" + manualSearchURL + " target='_blank'>Manual Search</a></td>");
+
+			//var manualSearchURL = "http://www.ratemyprofessors.com/search.jsp?queryBy=teacherName&schoolName=University+of+Georgia&queryoption=HEADER&query=" + profNameInArray[1]+ "&facetSearch=true";
+            manualSearchURL2 = "http://www.ratemyprofessors.com/search.jsp?query=" + profNameInArray[0] + "+" +profNameInArray[1];
+
+            //changed to manualSearchURL2
+			$(this).find(ratingCol).html(
+				"<td>Not Found or Too Many Results<br><a href=" + manualSearchURL2 + " target='_blank'>Try Manual Search</a></td>");
 			//console.log("manualSearchURL is " + manualSearchURL);
 		}
 	});
@@ -169,7 +189,7 @@ function scrapeAndSearch()
 {
 	$(".datadisplaytable").find("tr").each(function(index, value) {
 		if(index >= 2) {
-			var formattedName = formatName($(this).find("td:eq(13)").text());
+			var formattedName = formatName($(this).find(colForjQuery2).text());
 			if(formattedName === "TBA") {
 				updateCells(index,"TBA", "TBA");
 			} else {
@@ -189,10 +209,14 @@ function scrapeAndSearch()
                         var parsedResponse = $.parseHTML(response.receivedData)
 						var resultCount = $(parsedResponse).find("#searchResultsBox").find(".result-count").text();
 						if(resultCount === "Showing 1-1 of 1 result") {
-							var profURL = $(parsedResponse).find(".listings-wrap").find("a[href^='/ShowRatings.jsp?']").attr("href");
-							//console.log(profURL + " " + response.profName[0] + response.profName[1]);
-							//console.log("profIndex is " + response.profIndex);
-							extractRatings(profURL, response.profIndex, response.profName);
+                            var foundProfName = $(parsedResponse).find(".listings-wrap").find("a[href^='/ShowRatings.jsp?']").find(".listing-name").text();
+
+                            if (foundProfName.indexOf("University of Georgia") != -1) {
+                                var profURL = $(parsedResponse).find(".listings-wrap").find("a[href^='/ShowRatings.jsp?']").attr("href");
+                                extractRatings(profURL, response.profIndex, response.profName);
+                            } else {
+                                updateCells(response.profIndex, "Not Found", response.profName);
+                            }
 						} else {
 							//console.log(response.profName[0] + response.profName[1]  + " Not Found");
 							updateCells(response.profIndex, "Not Found", response.profName);

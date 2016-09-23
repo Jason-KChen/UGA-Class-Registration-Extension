@@ -1,12 +1,14 @@
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
 {
-	var generalSearchURL = "http://www.ratemyprofessors.com/search.jsp?queryBy=teacherName&schoolName=University+of+Georgia&queryoption=HEADER&query=TARGETPROF&facetSearch=true";
+	//var generalSearchURL = "http://www.ratemyprofessors.com/search.jsp?queryBy=teacherName&schoolName=University+of+Georgia&queryoption=HEADER&query=TARGETPROF&facetSearch=true";
+    var generalSearchURL2 = "http://www.ratemyprofessors.com/search.jsp?query=TARGETPROF";
 	var xhttp = new XMLHttpRequest();
 	var xhttpRequestURL = "";
 	if(request.Search === "yes")
 	{
 		var profNameInSeachURL = request.SearchName[0] + "+" + request.SearchName[1];
-		xhttpRequestURL = generalSearchURL.replace("TARGETPROF", profNameInSeachURL);
+		//xhttpRequestURL = generalSearchURL.replace("TARGETPROF", profNameInSeachURL);
+        xhttpRequestURL = generalSearchURL2.replace("TARGETPROF", profNameInSeachURL);
 	}
 	if(request.Search === "no")
 	{
