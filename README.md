@@ -10,7 +10,7 @@
 ![After](http://i.imgur.com/mqMOYP6.png)  
 
 ### Some Details
-- Version: 1.2.1  
+- Version: 1.3.1  
 - Icon made by Freepik from www.flaticon.com  
 - Used jQuery to manipulate the table
 - Feel free to contribute  
